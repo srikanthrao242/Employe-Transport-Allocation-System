@@ -1,11 +1,12 @@
 # Employe-Transport-Allocation-System
  This service will expose apis to book cabs and get booking status.
 ####Used stack
-``Scala-2.13 , 
+```Scala-2.13 , 
+   Mysql,
   akka-http, 
   spray-json, 
   pureconfig,
-  doobie``
+  doobie```
   
 ##### Running application
 First dump initial data from folder sql_schema <br>
