@@ -1,8 +1,7 @@
 package com.etas.routers
 
-import java.io.{PrintWriter, StringWriter}
 
-import akka.http.scaladsl.server.{ExceptionHandler, Route, RouteConcatenation}
+import akka.http.scaladsl.server.{Route, RouteConcatenation}
 import com.etas.AkkaCoreModule
 import akka.http.scaladsl.server.Directives._
 import com.etas.entities.Employee
@@ -15,17 +14,12 @@ import com.etas.db.EmployeeDB
 trait EmployeeRouter extends RouteConcatenation {
   this: AkkaCoreModule =>
 
-  val exceptionHandler = ExceptionHandler {
-    case exception: Exception =>
-      val sw = new StringWriter
-      exception.printStackTrace(new PrintWriter(sw))
-      complete(s"uncaught exception: $sw")
-  }
+  val employeeDB: EmployeeDB = EmployeeDB.apply()
 
   val employeeRoutes: Route =
     path("employees") {
       get {
-        complete(EmployeeDB.getEmployees)
+        complete(employeeDB.getEmployees)
       }
     } ~
       pathPrefix("employee") {
@@ -33,12 +27,12 @@ trait EmployeeRouter extends RouteConcatenation {
           post {
             entity(as[Employee]) {
               v =>
-                complete(EmployeeDB.insertEmployee(v).toString)
+                complete(employeeDB.insertEmployee(v).toString)
             }
           } ~
             put {
               entity(as[Employee]) {
-                v => complete(EmployeeDB.updateEmployee(1,v).toString)
+                v => complete(employeeDB.updateEmployee(1,v).toString)
               }
             }
         } ~
@@ -46,7 +40,7 @@ trait EmployeeRouter extends RouteConcatenation {
             concat(
               get {
                 complete {
-                  EmployeeDB.getEmployee(id)
+                  employeeDB.getEmployee(id)
                 }
               }
             )
@@ -55,7 +49,7 @@ trait EmployeeRouter extends RouteConcatenation {
             concat(
               delete {
                 complete {
-                  EmployeeDB.deleteEmployee(id).toString
+                  employeeDB.deleteEmployee(id).toString
                 }
               }
             )

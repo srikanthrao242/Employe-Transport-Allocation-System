@@ -5,7 +5,7 @@ import com.etas.entities.Employee
 import doobie.implicits._
 import com.etas.db.DBUtil.Dao
 
-object EmployeeDB {
+trait EmployeeDB {
 
   implicit val dao: Dao.Aux[Employee, Int] =
     Dao.derive[Employee, Int]("employee", "id")
@@ -26,4 +26,8 @@ object EmployeeDB {
 
   def updateEmployee(id: Int, emp: Employee): Int = update(id, emp).transact(MysqlExec.xa).unsafeRunSync()
 
+}
+
+object EmployeeDB{
+  def apply(): EmployeeDB = new EmployeeDB{}
 }

@@ -6,7 +6,7 @@ import spray.json.{DeserializationException, JsString, JsValue, RootJsonFormat}
 
 object RequestStatus extends Enumeration{
   type RequestStatus = Value
-  val GENERATED, PROCESSED, FAILED, CLOSED, CANCELLED = Value
+  val GENERATED, PROCESSED, FAILED, CLOSED, CANCELLED, CONFIRMED = Value
 }
 
 object FinalStatus extends Enumeration{

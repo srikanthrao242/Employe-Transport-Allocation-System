@@ -27,10 +27,11 @@ case class CheckStatus(bookingId: String,
                        bookingStatus: RequestStatus.Value,
                        passengerDetails: Employee,
                        driverDetails: Employee)
-case class Booking(status: RequestStatus.Value,
-                   sourceLocation: String,
-                   dateTimeOfJourney: Timestamp,
-                   emp_id: Int)
+
+case class BookingReq(requestStatus: String,
+                      sourceLocation: String,
+                      dateTimeOfJourney: Timestamp,
+                      requestGenerator: Int)
 
 case class Driver(id: Int,
                   driver_id: Int,

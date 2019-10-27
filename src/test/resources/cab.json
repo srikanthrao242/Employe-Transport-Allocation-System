@@ -1,0 +1,7 @@
+{
+  "registrationNumber" : 123,
+  "driverId": 1,
+  "cabStatus": "BOOKED",
+  "comments" : "abcd",
+  "vacancy": 3
+}

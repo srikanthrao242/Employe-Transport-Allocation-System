@@ -13,9 +13,11 @@ import DefaultJsonProtocol._
 trait CabRouter extends RouteConcatenation {
   this: AkkaCoreModule =>
 
+  val cabDB : CabDB = CabDB.apply()
+
   val cabRoutes = path("cabs") {
     get {
-      complete(CabDB.getCabs)
+      complete(cabDB.getCabs)
     }
   } ~
     pathPrefix("cabs") {
@@ -23,12 +25,12 @@ trait CabRouter extends RouteConcatenation {
         post {
           entity(as[Cabs]) {
             v =>
-              complete(CabDB.insertCab(v).toString)
+              complete(cabDB.insertCab(v).toString)
           }
         } ~
           put {
             entity(as[Cabs]) {
-              v => complete(CabDB.updateCab(1, v).toString)
+              v => complete(cabDB.updateCab(1, v).toString)
             }
           }
       } ~
@@ -36,7 +38,7 @@ trait CabRouter extends RouteConcatenation {
           concat(
             get {
               complete {
-                CabDB.getCab(id)
+                cabDB.getCab(id)
               }
             }
           )
@@ -45,7 +47,7 @@ trait CabRouter extends RouteConcatenation {
           concat(
             delete {
               complete {
-                CabDB.deleteCab(id).toString
+                cabDB.deleteCab(id).toString
               }
             }
           )
@@ -54,7 +56,7 @@ trait CabRouter extends RouteConcatenation {
           concat(
             put {
               complete {
-                CabDB.updateAvailability(id, avl).toString
+                cabDB.updateAvailability(id, avl).toString
               }
             }
           )

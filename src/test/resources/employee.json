@@ -1,8 +1,7 @@
 {
-  "id": 1,
-  "fullName": "abc",
+  "full_name": "abc",
   "designation": "developer",
-  "joiningDate": "24-08-2015",
+  "joiningDate": "2018-01-18 00:00:00",
   "email": "abc@gamil.com",
   "phone": "9676762142",
   "address": "hyd"
