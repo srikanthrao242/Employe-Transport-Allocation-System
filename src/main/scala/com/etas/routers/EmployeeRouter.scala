@@ -4,7 +4,7 @@ package com.etas.routers
 import akka.http.scaladsl.server.{Route, RouteConcatenation}
 import com.etas.AkkaCoreModule
 import akka.http.scaladsl.server.Directives._
-import com.etas.entities.Employee
+import com.etas.entities.{Employee, UpdateEmployee, UpdateEmployeeReq}
 import com.etas.entities.EntityAndSer._
 import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
@@ -31,8 +31,8 @@ trait EmployeeRouter extends RouteConcatenation {
             }
           } ~
             put {
-              entity(as[Employee]) {
-                v => complete(employeeDB.updateEmployee(1,v).toString)
+              entity(as[UpdateEmployeeReq]) {
+                v => complete(employeeDB.updateEmployee(v.id,v.details).toString)
               }
             }
         } ~

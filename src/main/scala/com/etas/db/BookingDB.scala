@@ -47,6 +47,9 @@ trait BookingDB {
   def getBookingDetails(id: Int): Option[BookingReq] = {
     find(id).transact(MysqlExec.xa).unsafeRunSync()
   }
+
+  def deleteBooking(id: Int): Int = delete(id).transact(MysqlExec.xa).unsafeRunSync()
+
 }
 
 object BookingDB{

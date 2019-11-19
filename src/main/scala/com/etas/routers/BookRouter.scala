@@ -45,9 +45,13 @@ trait BookRouter extends RouteConcatenation {
           complete {
             booking.checkStatus(id).toJson.toString
           }
+        } ~
+        delete {
+          complete {
+            booking.cancelBooking(id).toJson.toString
+          }
         }
       )
     }
   }
-
 }

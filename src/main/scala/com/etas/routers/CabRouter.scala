@@ -4,7 +4,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.RouteConcatenation
 import com.etas.AkkaCoreModule
 import com.etas.db.CabDB
-import com.etas.entities.Cabs
+import com.etas.entities.{Cabs, UpdateCab, UpdateCabReq}
 import com.etas.entities.EntityAndSer._
 import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
@@ -29,8 +29,8 @@ trait CabRouter extends RouteConcatenation {
           }
         } ~
           put {
-            entity(as[Cabs]) {
-              v => complete(cabDB.updateCab(1, v).toString)
+            entity(as[UpdateCabReq]) {
+              v => complete(cabDB.updateCab( v.id,v.details).toString)
             }
           }
       } ~

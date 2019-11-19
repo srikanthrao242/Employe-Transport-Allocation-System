@@ -78,6 +78,22 @@ trait Booking {
         ResponseErrors.getErrorRes("CAB_NOT_AVAILABLE")
     }
   }
+
+  def cancelBooking(reqId: Int): Responses ={
+    bookingDB.getBookingDetails(reqId) match {
+      case Some(booking) =>
+        cabDb.getCabBySource(booking.sourceLocation) match {
+          case Some((id, cab)) =>
+            bookingDB.deleteBooking(reqId)
+            SuccessRes(cabDb.updateVacancy(id, cab.vacancy - 1))
+          case None =>
+            ResponseErrors.getErrorRes("CAB_NOT_AVAILABLE")
+        }
+      case None =>
+        ResponseErrors.getErrorRes("CAB_NOT_AVAILABLE")
+    }
+  }
+
 }
 
 

@@ -2,7 +2,7 @@ package com.etas.db
 
 import cats.Show
 import com.etas.db.DBUtil.Dao
-import com.etas.entities.Cabs
+import com.etas.entities.{Cabs, UpdateCab}
 import doobie._
 import doobie.implicits._
 
@@ -12,9 +12,13 @@ trait CabDB {
 
   implicit val dao: Dao.Aux[Cabs, Int] =
     Dao.derive[Cabs, Int]("cab", "id")
+
+  implicit val udao: Dao.Aux[UpdateCab, Int] =
+    Dao.derive[UpdateCab, Int]("cab", "id")
   implicit val show: Show[Cabs] = Show.fromToString
 
   val dn = Dao[Cabs]
+  val udn = Dao[UpdateCab]
 
   import dn._
 
@@ -26,7 +30,7 @@ trait CabDB {
 
   def insertCab(ps: Cabs): Int = insert(ps).transact(MysqlExec.xa).unsafeRunSync()
 
-  def updateCab(id: Int, cab: Cabs): Int = update(id, cab).transact(MysqlExec.xa).unsafeRunSync()
+  def updateCab(id: Int,cab: UpdateCab): Int = udn.update(id,cab).transact(MysqlExec.xa).unsafeRunSync()
 
   def updateAvailability(id: Int, avl: String): Int =
     sql"update cab set available = '$avl'  where id = $id".update.run.transact(MysqlExec.xa).unsafeRunSync()
@@ -59,6 +63,21 @@ trait CabDB {
       case Success(Some(value)) => Some(value)
       case Failure(e) => e.printStackTrace()
         throw new Exception("checkstatus failed ")
+      case _ => None
+    }
+  }
+
+  def getCabBySource(source: String): Option[(Int,Cabs)] = {
+    val query = Query[String, (Int,Cabs)](
+      s"""
+                SELECT a.id, a.registrationNumber, a.driverId, a.cabStatus, a.comments, a.vacancy
+                FROM yantranet.cab a, yantranet.driver b
+                where a.driverId = b.driver_id and b.sourceLocation = ?
+              """).option(source)
+    Try(query.transact(MysqlExec.xa).unsafeRunSync()) match {
+      case Success(Some(value)) => Some(value)
+      case Failure(e) => e.printStackTrace()
+        throw new Exception("getCabBySource failed ")
       case _ => None
     }
   }
